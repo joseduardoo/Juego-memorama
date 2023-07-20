@@ -24,7 +24,7 @@ const abc = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","Ñ","O","P
 var cards = [];
 var card = {};
 //numero te tarjetas que quiero ***** tiene que ser un numero par  ****
-const noCards = 56
+const noCards = 16;
 
 //Variables que ayudan a voltear solo 2 cartas
 var count=[];
@@ -86,25 +86,25 @@ function start() {
 
 // Funcion que "voltea" las cartas/tarjetas
 function flip(id, card) {
-	document.getElementById(id).classList.remove("back");
-	document.getElementById(id).classList.add("front");
-	document.getElementById(id).innerHTML = cards[card]["value"];
+	if (flipedCards.length < 2){
+	    document.getElementById(id).classList.remove("back");
+	    document.getElementById(id).classList.add("front");
+	    document.getElementById(id).innerHTML = cards[card]["value"];
 
-	count.push(cards[card]["value"]);
-	flipedCards.push(id);
+	    count.push(cards[card]["value"]);
+	    flipedCards.push(id);
 
-	//condicion que permite voltear solo dos cartas/tarjetas
-	if (count.length == 2){
-		if (count[0] == count[1]) {
-			count = [];
-			flipedCards = [];
-		}
-		else {
-			count = [];
-			setTimeout(returnFlipCard, 1500, flipedCards[0], flipedCards[1]);
-			flipedCards = [];
+	    //condicion que permite voltear solo dos cartas/tarjetas
+	    if (count.length == 2){
+	    	if (count[0] == count[1] && flipedCards[0] != flipedCards[1]) {
+	    		setTimeout(deleteCards, 1000, flipedCards[0], flipedCards[1]);
+			    count = [];
+			} else {
+				count = [];
+				setTimeout(returnFlipCard, 1500, flipedCards[0], flipedCards[1]);
+			};
 		};
-	};
+    };
 };
 
 // Funcion que voltea de nuevo las cartas volteadas
@@ -115,7 +115,15 @@ function returnFlipCard(id1, id2) {
     document.getElementById(id2).classList.add("back");
     document.getElementById(id1).classList.remove("front");
     document.getElementById(id2).classList.remove("front");
-}
+    flipedCards = [];
+};
+
+//Funcion que elimina las cartas pares
+function deleteCards(id1, id2) {
+	document.getElementById(id1).classList.add("unseen");
+	document.getElementById(id2).classList.add("unseen");
+    flipedCards = [];
+};
 
 // Funcion que reinicia el juego
 function restart() {
@@ -125,6 +133,8 @@ function restart() {
 		elemento[i].innerHTML = "?";
 		elemento[i].classList.add("back");
 		elemento[i].classList.remove("front");
+		elemento[i].classList.remove("unseen");
+
 	};
 
 };
